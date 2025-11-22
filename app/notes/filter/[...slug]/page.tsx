@@ -36,7 +36,11 @@ export async function generateMetadata({
       url: `${APP_URL}/notes/filter/${
         Array.isArray(slug) ? slug.join('/') : ''
       }`,
-      images: ['https://ac.goit.global/fullstack/react/notehub-og-meta.jpg'],
+      images: [
+        {
+          url: 'https://ac.goit.global/fullstack/react/notehub-og-meta.jpg',
+        },
+      ],
       type: 'website',
     },
   };
@@ -49,10 +53,10 @@ type Props = {
 
 function parseTag(slug?: string[]): NoteTag | undefined {
   const raw = slug?.[0];
-  if (!raw || raw === 'All') return undefined; 
+  if (!raw || raw === 'All') return undefined;
   const t = decodeURIComponent(raw) as NoteTag;
   if (TAGS.includes(t)) return t;
-  notFound(); 
+  notFound();
 }
 
 const toStr = (v: string | string[] | undefined, d = '') =>
@@ -65,7 +69,6 @@ const toNum = (v: string | string[] | undefined, d: number) => {
 };
 
 export default async function FilteredNotesPage({ params, searchParams }: Props) {
- 
   const { slug } = await params;
   const sp = await searchParams;
 
@@ -82,12 +85,7 @@ export default async function FilteredNotesPage({ params, searchParams }: Props)
 
   return (
     <HydrationBoundary state={dehydrate(qc)}>
-      <NotesClient
-        initialSearch={search}
-        initialPage={page}
-        perPage={perPage}
-        tag={tag}
-      />
+      <NotesClient tag={tag} />
     </HydrationBoundary>
   );
 }
